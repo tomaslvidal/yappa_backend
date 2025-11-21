@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: yappa-postgres
+    environment:
+      POSTGRES_DB: yappa_db
+      POSTGRES_USER: yappa_user
+      POSTGRES_PASSWORD: yappa_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - yappa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yappa_user -d yappa_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yappa-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/yappa_db
+      SPRING_DATASOURCE_USERNAME: yappa_user
+      SPRING_DATASOURCE_PASSWORD: yappa_password
+    ports:
+      - "8080:8080"
+    networks:
+      - yappa-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  yappa-network:
+    driver: bridge
