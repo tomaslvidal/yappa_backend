@@ -2,7 +2,10 @@
 
 ## Sistema de ABM de Clientes
 
-API RESTful desarrollada con **Java 17**, **Spring Boot 3**, **PostgreSQL** y **Docker** para la gestión completa de clientes (Alta, Baja, Modificación).
+Aplicación Full Stack para la gestión completa de clientes (Alta, Baja, Modificación) desarrollada con:
+- **Backend**: Java 17, Spring Boot 3, PostgreSQL
+- **Frontend**: React.js 18, Bootstrap 5, Vite
+- **Infraestructura**: Docker, Docker Compose
 
 ---
 
@@ -23,6 +26,7 @@ API RESTful desarrollada con **Java 17**, **Spring Boot 3**, **PostgreSQL** y **
 
 ## Tecnologías
 
+### Backend
 | Tecnología | Versión | Propósito |
 |-----------|---------|-----------|
 | **Java** | 17 | Lenguaje de programación |
@@ -35,6 +39,23 @@ API RESTful desarrollada con **Java 17**, **Spring Boot 3**, **PostgreSQL** y **
 | **JUnit 5** | - | Testing unitario |
 | **Mockito** | - | Mocking para tests |
 | **Maven** | - | Gestión de dependencias |
+
+### Frontend
+| Tecnología | Versión | Propósito |
+|-----------|---------|-----------|
+| **React** | 18.2.0 | Librería UI |
+| **React Router** | 6.20.0 | Navegación SPA |
+| **Bootstrap** | 5.3.2 | Framework CSS |
+| **React Bootstrap** | 2.9.1 | Componentes React |
+| **Axios** | 1.6.2 | Cliente HTTP |
+| **Formik** | 2.4.5 | Manejo de formularios |
+| **Yup** | 1.3.3 | Validación de esquemas |
+| **Vite** | 5.0.5 | Build tool |
+| **Nginx** | Alpine | Servidor web |
+
+### Infraestructura
+| Tecnología | Versión | Propósito |
+|-----------|---------|-----------|
 | **Docker** | - | Contenedorización |
 | **Docker Compose** | - | Orquestación |
 
@@ -42,7 +63,8 @@ API RESTful desarrollada con **Java 17**, **Spring Boot 3**, **PostgreSQL** y **
 
 ## Características
 
-- ✅ **CRUD completo** de clientes
+### Backend
+- ✅ **CRUD completo** de clientes (API REST)
 - ✅ **Validaciones** de datos (Bean Validation)
 - ✅ **Constraints únicos** (CUIT y Email)
 - ✅ **Búsqueda** por CUIT y Email
@@ -52,8 +74,26 @@ API RESTful desarrollada con **Java 17**, **Spring Boot 3**, **PostgreSQL** y **
 - ✅ **Manejo de excepciones** centralizado
 - ✅ **DTOs** para entrada/salida
 - ✅ **Logs estructurados** con SLF4J
-- ✅ **Docker** ready
+- ✅ **Configuración CORS** para frontend
 - ✅ **Timestamps automáticos** (creación/modificación)
+
+### Frontend
+- ✅ **Interfaz moderna** con React + Bootstrap 5
+- ✅ **Listado de clientes** con búsqueda en tiempo real
+- ✅ **Formularios validados** con Formik + Yup
+- ✅ **Vista detallada** de cada cliente
+- ✅ **Edición** de clientes existentes
+- ✅ **Eliminación** con confirmación
+- ✅ **Diseño responsive** mobile-first
+- ✅ **Manejo de errores** con feedback visual
+- ✅ **Loading states** para mejor UX
+- ✅ **Navegación** con React Router
+
+### Infraestructura
+- ✅ **Docker Compose** con 3 servicios (PostgreSQL, Backend, Frontend)
+- ✅ **Nginx** como reverse proxy
+- ✅ **Comunicación** entre contenedores
+- ✅ **Volúmenes persistentes** para la base de datos
 
 ---
 
@@ -61,33 +101,62 @@ API RESTful desarrollada con **Java 17**, **Spring Boot 3**, **PostgreSQL** y **
 
 ```
 yappa/
-├── src/
+├── frontend/                                  # Frontend React
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── common/                       # Componentes reutilizables
+│   │   │   │   ├── Loading.jsx
+│   │   │   │   ├── ErrorAlert.jsx
+│   │   │   │   └── ConfirmDialog.jsx
+│   │   │   └── layout/                       # Layout components
+│   │   │       ├── Navbar.jsx
+│   │   │       └── Footer.jsx
+│   │   ├── pages/                            # Páginas principales
+│   │   │   ├── Home.jsx
+│   │   │   ├── ClienteList.jsx
+│   │   │   ├── ClienteForm.jsx
+│   │   │   ├── ClienteDetail.jsx
+│   │   │   └── NotFound.jsx
+│   │   ├── services/                         # Servicios API
+│   │   │   ├── api.js
+│   │   │   └── clienteService.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── README.md
+├── src/                                       # Backend Spring Boot
 │   ├── main/
 │   │   ├── java/com/yappa/
-│   │   │   ├── YappaApplication.java          # Clase principal
+│   │   │   ├── YappaApplication.java
 │   │   │   ├── config/
-│   │   │   │   └── SwaggerConfig.java         # Configuración Swagger
+│   │   │   │   ├── SwaggerConfig.java
+│   │   │   │   └── CorsConfig.java           # Configuración CORS
 │   │   │   ├── controller/
-│   │   │   │   └── ClienteController.java     # API REST endpoints
+│   │   │   │   └── ClienteController.java
 │   │   │   ├── dto/
-│   │   │   │   ├── ClienteRequestDTO.java     # DTO de entrada
-│   │   │   │   └── ClienteResponseDTO.java    # DTO de salida
+│   │   │   │   ├── ClienteRequestDTO.java
+│   │   │   │   └── ClienteResponseDTO.java
 │   │   │   ├── entity/
-│   │   │   │   └── Cliente.java               # Entidad JPA
+│   │   │   │   └── Cliente.java
 │   │   │   ├── exception/
 │   │   │   │   ├── GlobalExceptionHandler.java
 │   │   │   │   ├── ResourceNotFoundException.java
 │   │   │   │   └── BusinessException.java
 │   │   │   ├── repository/
-│   │   │   │   └── ClienteRepository.java     # Repository JPA
+│   │   │   │   └── ClienteRepository.java
 │   │   │   └── service/
 │   │   │       ├── ClienteService.java
 │   │   │       └── impl/
 │   │   │           └── ClienteServiceImpl.java
 │   │   └── resources/
-│   │       ├── application.yml                # Configuración principal
-│   │       ├── application-dev.yml            # Perfil desarrollo
-│   │       ├── application-prod.yml           # Perfil producción
+│   │       ├── application.yml
+│   │       ├── application-dev.yml
+│   │       ├── application-prod.yml
 │   │       └── db/migration/
 │   │           └── V1__create_clientes_table.sql
 │   └── test/
@@ -111,10 +180,14 @@ yappa/
 
 ## Requisitos Previos
 
+### Con Docker (Recomendado)
+- **Docker** y **Docker Compose**
+
+### Sin Docker
 - **Java 17** o superior
 - **Maven 3.8+**
-- **Docker** y **Docker Compose** (para ejecución con contenedores)
-- **PostgreSQL 15** (si no usas Docker)
+- **Node.js 18+** y **npm**
+- **PostgreSQL 15**
 
 ---
 
@@ -131,13 +204,15 @@ cd yappa
 docker-compose up --build
 
 # La aplicación estará disponible en:
-# - API: http://localhost:8080
+# - Frontend: http://localhost:3000
+# - API Backend: http://localhost:8080
 # - Swagger UI: http://localhost:8080/swagger-ui.html
-# - PostgreSQL: localhost:5432
+# - PostgreSQL: localhost:5433
 ```
 
 ### **Opción 2: Ejecución Local**
 
+**Backend:**
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/tomaslvidal/yappa.git
@@ -145,16 +220,26 @@ cd yappa
 
 # 2. Configurar PostgreSQL
 createdb yappa_db
-# O usar el schema.sql proporcionado
 
-# 3. Compilar el proyecto
+# 3. Compilar y ejecutar el backend
 ./mvnw clean install
-
-# 4. Ejecutar la aplicación
 ./mvnw spring-boot:run
 
-# O ejecutar el JAR generado
-java -jar target/yappa-1.0.0.jar
+# Backend disponible en http://localhost:8080
+```
+
+**Frontend:**
+```bash
+# En otra terminal
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Ejecutar servidor de desarrollo
+npm run dev
+
+# Frontend disponible en http://localhost:3000
 ```
 
 ### **Opción 3: Desde IDE**
@@ -558,7 +643,8 @@ curl -X GET http://localhost:8080/api/clientes/email/juan.perez@example.com
 ```yaml
 services:
   postgres:    # Base de datos PostgreSQL 15
-  app:         # Aplicación Spring Boot
+  app:         # Backend Spring Boot
+  frontend:    # Frontend React + Nginx
 ```
 
 ### **Comandos Docker**

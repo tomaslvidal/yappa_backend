@@ -40,6 +40,19 @@ services:
       - yappa-network
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: yappa-frontend
+    depends_on:
+      - app
+    ports:
+      - "3000:80"
+    networks:
+      - yappa-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
     driver: local
